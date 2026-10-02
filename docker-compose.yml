@@ -1,0 +1,25 @@
+services:
+  database:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: invoiceflow
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+      POSTGRES_DB: invoiceflow
+    volumes: [invoiceflow-data:/var/lib/postgresql/data]
+    healthcheck:
+      test: [CMD-SHELL, pg_isready -U invoiceflow]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  app:
+    build: .
+    ports: ["4002:4002"]
+    environment:
+      DATABASE_URL: postgresql://invoiceflow:${POSTGRES_PASSWORD}@database:5432/invoiceflow
+      APP_ORIGIN: http://localhost:4002
+      PORT: 4002
+    depends_on:
+      database:
+        condition: service_healthy
+volumes:
+  invoiceflow-data:

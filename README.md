@@ -4,6 +4,8 @@ A complete freelancer business workspace for clients, reusable services, invoice
 
 ## Explore
 
+[Live demo](https://invoiceflow-dina19.vercel.app) · [GitHub source](https://github.com/alexdina712-dev/invoiceflow)
+
 Use **Explore the demo workspace** on the sign-in screen, or sign in with `demo@invoiceflow.app` / `InvoiceFlowDemo!2026`. All sample companies, contact information, invoices, and payment instructions are fictional. The shared demo is editable; create a private account for your own data.
 
 Deployment details and verified URLs are maintained in [PUBLIC_DEPLOYMENT.md](docs/PUBLIC_DEPLOYMENT.md).

@@ -133,3 +133,7 @@ Future development: credit notes, invoice email delivery with audit trails, conf
 Developed with Codex assistance. The proven authentication, local-runtime, and deployment scaffold was adapted from the earlier CareerLens AI portfolio project; the invoicing domain, calculations, database model, PDFs, UI, and tests were built for InvoiceFlow. [Case study](PORTFOLIO_CASE_STUDY.md) describes concrete decisions and learning topics without claiming independent authorship or unmeasured business outcomes.
 
 References: [decimal.js documentation](https://mikemcl.github.io/decimal.js/), [PDFKit documentation](https://pdfkit.org/docs/getting_started.html). PDF fonts are Noto Sans under the included SIL Open Font License. Application source is MIT licensed.
+
+## Latest quality audit
+
+See [QA audit — 2 October 2026](docs/QA_AUDIT_2026-10-02.md) for expanded device coverage, reproduced fixes, dependency checks and verification limits.

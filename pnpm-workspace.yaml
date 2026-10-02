@@ -9,3 +9,8 @@ allowBuilds:
   '@prisma/engines': true
   esbuild: true
   prisma: true
+
+# Patched transitive dependencies used by Prisma's configuration loader.
+overrides:
+  effect: 3.20.0
+  deepmerge-ts: 8.0.0

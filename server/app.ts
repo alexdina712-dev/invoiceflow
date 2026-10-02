@@ -15,12 +15,12 @@ app.set('trust proxy', 1);
 app.use(helmet());
 const origin = process.env.APP_ORIGIN || 'http://127.0.0.1:5175';
 app.use(cors({ origin, credentials: true }));
-app.use(express.json({ limit: '512kb' }));
-app.use(cookieParser());
 app.use('/api', (_req, res, next) => {
   res.set('Cache-Control', 'no-store');
   next();
 });
+app.use(express.json({ limit: '512kb' }));
+app.use(cookieParser());
 // Origin verification protects cookie-authenticated mutations, including login CSRF.
 app.use('/api', (req, _res, next) => {
   if (

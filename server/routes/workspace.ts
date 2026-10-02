@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { db } from '../db.js';
 import { ApiError } from '../errors.js';
 import { revokeSession } from '../auth.js';
-import { profileSchema } from '../../shared/validation.js';
+import { profileSchema, loginSchema } from '../../shared/validation.js';
 import { clients } from './clients.js';
 import { services } from './services.js';
 import { invoices, filtered } from './invoices.js';
@@ -79,7 +79,7 @@ workspaceRoutes.get('/export/invoices', async (req, res) => {
     );
 });
 workspaceRoutes.delete('/account', async (req, res) => {
-  const { password } = z.object({ password: z.string().min(1).max(72) }).parse(req.body);
+  const { password } = z.object({ password: loginSchema.shape.password }).parse(req.body);
   const user = await db.user.findUnique({ where: { id: req.userId } });
   if (user?.email === 'demo@invoiceflow.app')
     throw new ApiError(403, 'The fictional demo account cannot be deleted.');

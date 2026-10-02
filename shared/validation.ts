@@ -27,14 +27,15 @@ export const dateSchema = z
       s <= '2100-12-31'
     );
   }, 'Enter a valid date between 1970 and 2100.');
-const password = z
-  .string()
-  .min(10)
-  .max(72)
-  .refine(
-    (s) => new TextEncoder().encode(s).length <= 72,
-    'Password must be at most 72 UTF-8 bytes.',
-  );
+const password = (minimum: number) =>
+  z
+    .string()
+    .min(minimum)
+    .max(72)
+    .refine(
+      (s) => new TextEncoder().encode(s).length <= 72,
+      'Password must be at most 72 UTF-8 bytes.',
+    );
 export const loginSchema = z.object({
   email: z
     .string()
@@ -42,11 +43,11 @@ export const loginSchema = z.object({
     .email()
     .max(254)
     .transform((s) => s.toLowerCase()),
-  password: z.string().min(1).max(72),
+  password: password(1),
 });
 export const registerSchema = loginSchema.extend({
   name: z.string().trim().min(2).max(80),
-  password,
+  password: password(10),
 });
 export const profileSchema = z.object({
   name: z.string().trim().min(2).max(120),
@@ -67,15 +68,13 @@ export const serviceSchema = z.object({
   taxRate: percentSchema,
   currency: z.enum(currencies),
 });
-export const lineSchema = serviceSchema
-  .omit({ currency: true })
-  .extend({
-    quantity: decimal(6, 3).refine(
-      (s) => new Decimal(s).gt(0),
-      'Quantity must be greater than zero.',
-    ),
-    discountPercent: percentSchema,
-  });
+export const lineSchema = serviceSchema.omit({ currency: true }).extend({
+  quantity: decimal(6, 3).refine(
+    (s) => new Decimal(s).gt(0),
+    'Quantity must be greater than zero.',
+  ),
+  discountPercent: percentSchema,
+});
 export const invoiceSchema = z
   .object({
     clientId: z.string().min(1).max(100),

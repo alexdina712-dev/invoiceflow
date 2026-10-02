@@ -1,4 +1,13 @@
 import { test, expect, type Page } from '@playwright/test';
+const browserErrors = new WeakMap<Page, string[]>();
+test.beforeEach(async ({ page }) => {
+  const errors: string[] = [];
+  browserErrors.set(page, errors);
+  page.on('pageerror', (error) => errors.push(error.message));
+});
+test.afterEach(async ({ page }) => {
+  expect(browserErrors.get(page), 'Uncaught browser exceptions').toEqual([]);
+});
 const password = 'BrowserTest!2026';
 let email = '';
 async function api(page: Page, path: string, method = 'GET', data?: unknown) {

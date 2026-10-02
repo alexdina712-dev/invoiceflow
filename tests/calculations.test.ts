@@ -97,3 +97,38 @@ describe('Invoice calculation contract', () => {
     expect(result).toContain('a""b');
   });
 });
+
+// Independent integer-cent oracle exercises fractional quantities and percentages.
+it('matches an integer arithmetic oracle for 500 generated invoice lines', () => {
+  let seed = 20261002;
+  const next = (max: number) => {
+    seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+    return seed % max;
+  };
+  const format = (value: bigint) => `${value / 100n}.${(value % 100n).toString().padStart(2, '0')}`;
+  const roundRatio = (n: bigint, d: bigint) => (n * 2n + d) / (d * 2n);
+  for (let i = 0; i < 500; i++) {
+    const quantityHundredths = BigInt(next(100000) + 1);
+    const priceCents = BigInt(next(1000000));
+    const discountHundredths = BigInt(next(10001));
+    const taxHundredths = BigInt(next(10001));
+    const base = roundRatio(quantityHundredths * priceCents, 100n);
+    const discount = roundRatio(base * discountHundredths, 10000n);
+    const tax = roundRatio((base - discount) * taxHundredths, 10000n);
+    const result = calculateInvoice([
+      {
+        ...line,
+        quantity: format(quantityHundredths),
+        unitPrice: format(priceCents),
+        discountPercent: format(discountHundredths),
+        taxRate: format(taxHundredths),
+      },
+    ]);
+    expect(result).toMatchObject({
+      subtotal: format(base),
+      discountTotal: format(discount),
+      taxTotal: format(tax),
+      total: format(base - discount + tax),
+    });
+  }
+});
